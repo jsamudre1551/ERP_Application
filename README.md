@@ -1,96 +1,119 @@
 # Manufacturing ERP System - API Documentation
 
-Base URL: `http://localhost:5000/api`
+Base URL: `http://localhost:5000/api`  
 Content-Type: `application/json`
 
 ---
 
-## 1. Transactional Endpoints
+# 1. Transactional Endpoints
 
-### 1.1 Place Customer Order
-Creates a new customer order for a finished good. Inventory is not deducted until the order is dispatched.
+## 1.1 Place Customer Order
 
-* **URL:** `/orders`
-* **Method:** `POST`
-* **Body:**
-  ```json
-  {
-    "item_id": 3,
-    "quantity": 5
-  }
+Creates a new customer order for a finished good.  
+Inventory is not deducted until the order is dispatched.
 
-  1.2 Create Purchase Order (PO)
+- **URL:** `/orders`
+- **Method:** `POST`
+
+### Request Body
+
+```json
+{
+  "item_id": 3,
+  "quantity": 5
+}
+```
+
+---
+
+## 1.2 Create Purchase Order (PO)
+
 Creates an inbound request to purchase raw materials.
 
-URL: /purchase-orders
+- **URL:** `/purchase-orders`
+- **Method:** `POST`
 
-Method: POST
+### Request Body
 
-Body:
-
+```json
 {
   "item_id": 1,
   "quantity": 50
 }
+```
 
-1.3 Inward Materials
+---
+
+## 1.3 Inward Materials
+
 Receives raw materials from a pending PO, updates PO status, and increments physical stock.
 
-URL: /inward
+- **URL:** `/inward`
+- **Method:** `POST`
 
-Method: POST
+### Request Body
 
-Body:
+```json
 {
   "po_id": 1,
   "item_id": 1,
   "quantity": 50
 }
+```
 
+---
 
-1.4 Process Production
+## 1.4 Process Production
+
 Executes a database transaction to consume raw materials and produce finished goods. Logs the production history.
 
-URL: /production
+- **URL:** `/production`
+- **Method:** `POST`
 
-Method: POST
+### Request Body
 
-Body:
+```json
 {
   "raw_id": 1,
   "raw_qty": 10,
   "finished_id": 3,
   "finished_qty": 2
 }
+```
 
-1.5 Dispatch / Outward Goods
+---
+
+## 1.5 Dispatch / Outward Goods
+
 Fulfills a pending customer order. Decrements physical stock and updates order status.
 
-URL: /outward
+- **URL:** `/outward`
+- **Method:** `POST`
 
-Method: POST
+### Request Body
 
-Body:
-
+```json
 {
   "order_id": 1,
   "item_id": 3,
   "quantity": 5
 }
+```
 
-2. Reporting Endpoints (Read-Only)
-2.1 Get Inventory Ledger
+---
+
+# 2. Reporting Endpoints (Read-Only)
+
+## 2.1 Get Inventory Ledger
+
 Retrieves current stock levels of all raw materials and finished goods.
 
-URL: /reports/inventory
+- **URL:** `/reports/inventory`
+- **Method:** `GET`
 
-Method: GET
+### Success Response
 
-Success Response:
-
-Code: 200 OK
-
-Content:
+```json
 [
   {
     "id": 1,
@@ -99,20 +122,20 @@ Content:
     "stock": 100
   }
 ]
+```
 
-2.2 Get Customer Orders
+---
+
+## 2.2 Get Customer Orders
+
 Retrieves all customer orders with resolved item names.
 
-URL: /reports/orders
+- **URL:** `/reports/orders`
+- **Method:** `GET`
 
-Method: GET
+### Success Response
 
-Success Response:
-
-Code: 200 OK
-
-Content:
-
+```json
 [
   {
     "id": 1,
@@ -121,21 +144,20 @@ Content:
     "status": "Pending"
   }
 ]
+```
 
-2.3 Get Purchase Orders
+---
+
+## 2.3 Get Purchase Orders
+
 Retrieves all vendor purchase orders with resolved material names.
 
-URL: /reports/purchases
+- **URL:** `/reports/purchases`
+- **Method:** `GET`
 
-Method: GET
+### Success Response
 
-Success Response:
-
-Code: 200 OK
-
-Content:
-
-JSON
+```json
 [
   {
     "id": 1,
@@ -144,19 +166,20 @@ JSON
     "status": "Inwarded"
   }
 ]
+```
 
-2.4 Get Production History
+---
+
+## 2.4 Get Production History
+
 Retrieves the historical ledger of factory production runs.
 
-URL: /reports/production
+- **URL:** `/reports/production`
+- **Method:** `GET`
 
-Method: GET
+### Success Response
 
-Success Response:
-
-Code: 200 OK
-
-Content:
+```json
 [
   {
     "id": 1,
@@ -165,3 +188,4 @@ Content:
     "quantity_produced": 2
   }
 ]
+```
